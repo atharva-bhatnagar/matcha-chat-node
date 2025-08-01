@@ -2,6 +2,7 @@ const User = require("../models/User");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const WaitList = require("../models/WaitList");
+const emailCache = require("../cache");
 
 exports.registerWait = async (req, res) => {
   const { email, user_id,user_type,company,name,website,linkedIn,sub_type } = req.body;
@@ -130,6 +131,8 @@ exports.getWait = async (req, res) => {
 
 exports.sendMail=async(req,res)=>{
 
+  let idempotencyKey=""
+
   try {
     const apiKey = req.headers['x-api-key'];
 
@@ -143,6 +146,7 @@ exports.sendMail=async(req,res)=>{
   }
   let mail=""
   if(userType=="company"){
+    idempotencyKey=`c_${email}`
     mail=`<!DOCTYPE html>
     <html>
       <head>
@@ -182,6 +186,7 @@ exports.sendMail=async(req,res)=>{
     </html>
     `
   }else{
+    idempotencyKey=`t_${email}`
     mail=`<!DOCTYPE html>
 <html>
   <head>
@@ -222,6 +227,12 @@ exports.sendMail=async(req,res)=>{
 `
   }
 
+  if(emailCache.has(idempotencyKey)){
+    return res.status(200).json({ message: 'Email already sent recently' });
+  }
+
+  emailCache.set(idempotencyKey,true)
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -240,6 +251,7 @@ exports.sendMail=async(req,res)=>{
   await transporter.sendMail(mailOptions);
   res.status(201).json({ msg: "Added to waitlist" });
   } catch (error) {
+    emailCache.del(idempotencyKey);
     res.status(500).json({ msg: "Server error", error });
     console.log(error)
   }
