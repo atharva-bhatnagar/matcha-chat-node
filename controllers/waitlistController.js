@@ -228,10 +228,11 @@ exports.sendMail=async(req,res)=>{
   }
 
   if(emailCache.has(idempotencyKey)){
-    return res.status(200).json({ message: 'Email already sent recently' });
+    return res.status(201).json({ message: 'Email already sent recently' });
   }
 
   emailCache.set(idempotencyKey,true)
+  console.log(`${email} before nodemailer`)
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -247,8 +248,11 @@ exports.sendMail=async(req,res)=>{
     subject: "Welcome to waitlist - Matcha",
     html: mail
   };
+  console.log(`${email} before sendmail`)
 
   await transporter.sendMail(mailOptions);
+  console.log(`${email} after sendmail`)
+
   res.status(201).json({ msg: "Added to waitlist" });
   } catch (error) {
     emailCache.del(idempotencyKey);
