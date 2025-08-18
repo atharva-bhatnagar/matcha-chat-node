@@ -40,8 +40,8 @@ exports.registerWait = async (req, res) => {
       <p><strong>Team Matcha</strong></p>
 
       <p>
-        <a href="https://www.linkedin.com/company/quantum-leap-labs/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
-        <a href="https://x.com/quantumleaplab" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
+        <a href="https://www.linkedin.com/company/matcha-talent/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
+        <a href="https://x.com/matchatalent_io" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
         <a href="https://discord.gg/wBHEDr9Awh" style="color: #0038FF; text-decoration: underline;">Join our startup community</a>
       </p>
     </div>
@@ -79,8 +79,8 @@ exports.registerWait = async (req, res) => {
       <p><strong>Team Matcha</strong></p>
 
       <p>
-        <a href="https://www.linkedin.com/company/quantum-leap-labs/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
-        <a href="https://x.com/quantumleaplab" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
+        <a href="https://www.linkedin.com/company/matcha-talent/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
+        <a href="https://x.com/matchatalent_io" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
         <a href="https://discord.gg/wBHEDr9Awh" style="color: #0038FF; text-decoration: underline;">Join our startup community</a>
       </p>
     </div>
@@ -139,7 +139,7 @@ exports.sendMail=async(req,res)=>{
   if (apiKey !== process.env.API_KEY) {
     return res.status(401).json({ error: 'Unauthorized: Invalid API Key' });
   }
-  const { name, email, userType } = req.body;
+  const { name, email, userType, code } = req.body;
 
   if (!name || !email || !userType) {
     return res.status(400).json({ error: 'Missing name, email, or userType' });
@@ -177,9 +177,13 @@ exports.sendMail=async(req,res)=>{
           <p><strong>Team Matcha</strong></p>
     
           <p>
-            <a href="https://www.linkedin.com/company/quantum-leap-labs/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
-            <a href="https://x.com/quantumleaplab" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
+            <a href="https://www.linkedin.com/company/matcha-talent/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
+            <a href="https://x.com/matchatalent_io" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
             <a href="https://discord.gg/wBHEDr9Awh" style="color: #0038FF; text-decoration: underline;">Join our startup community</a>
+          </p>
+          <p>
+            <a href="${process.env.MATCHA_URL}/unsubscribe?id=${idempotencyKey}&code=${code}" style="color: #0038FF; text-decoration: underline;">Unsubscribe</a>&nbsp;|&nbsp;
+            <a href="${process.env.MATCHA_URL}/opt?id=${idempotencyKey}&code=${code}" style="color: #0038FF; text-decoration: underline;">Opt out of Matcha waitlist</a>
           </p>
         </div>
       </body>
@@ -217,9 +221,14 @@ exports.sendMail=async(req,res)=>{
       <p><strong>Team Matcha</strong></p>
 
       <p>
-        <a href="https://www.linkedin.com/company/quantum-leap-labs/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
-        <a href="https://x.com/quantumleaplab" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
+        <a href="https://www.linkedin.com/company/matcha-talent/" style="color: #0038FF; text-decoration: underline;">Connect on LinkedIn</a> &nbsp;|&nbsp;
+        <a href="https://x.com/matchatalent_io" style="color: #0038FF; text-decoration: underline;">Follow us on X</a> &nbsp;|&nbsp;
         <a href="https://discord.gg/wBHEDr9Awh" style="color: #0038FF; text-decoration: underline;">Join our startup community</a>
+        
+      </p>
+      <p>
+        <a href="${process.env.MATCHA_URL}/unsubscribe?id=${idempotencyKey}&code=${code}" style="color: #0038FF; text-decoration: underline;">Unsubscribe</a>&nbsp;|&nbsp;
+        <a href="${process.env.MATCHA_URL}/opt?id=${idempotencyKey}&code=${code}" style="color: #0038FF; text-decoration: underline;">Opt out of Matcha waitlist</a>
       </p>
     </div>
   </body>
